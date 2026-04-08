@@ -1,0 +1,14 @@
+{
+  "rewrites": [
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "app.roleiq.org" }],
+      "destination": "/dashboard.html"
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "applicant.roleiq.org" }],
+      "destination": "/applicant-portal.html"
+    }
+  ]
+}
