@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROLEIQ — Applicant Portal</title>
+<link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=cabinet-grotesk@300,400,500,700,800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --black:#0a0a0a;
+  --white:#ffffff;
+  --off-white:#f5f4f0;
+  --accent:#c8f55a;
+  --accent-dark:#a8d63a;
+  --muted:#6b6b6b;
+  --border:#e8e6e0;
+  --dark-muted:#9a9a9a;
+  --surface:rgba(255,255,255,0.04);
+  --surface-hover:rgba(255,255,255,0.07);
+  --border-subtle:rgba(255,255,255,0.08);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Cabinet Grotesk',sans-serif;background:var(--black);color:var(--white);overflow-x:hidden;min-height:100vh}
+a{text-decoration:none;color:inherit}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.25rem 3rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border-subtle);background:rgba(10,10,10,0.9);backdrop-filter:blur(12px)}
+.nav-logo{font-family:'Clash Display',sans-serif;font-weight:700;font-size:1.4rem;letter-spacing:-0.02em;cursor:pointer}
+.nav-logo span{color:var(--accent)}
+.nav-right{display:flex;align-items:center;gap:1.5rem}
+.nav-user{display:flex;align-items:center;gap:0.75rem;font-size:0.875rem;color:var(--dark-muted)}
+.nav-avatar{width:32px;height:32px;background:rgba(200,245,90,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Clash Display',sans-serif;font-weight:700;font-size:0.7rem;color:var(--accent);border:1px solid rgba(200,245,90,0.2)}
+.nav-logout{font-size:0.8rem;color:var(--dark-muted);cursor:pointer;transition:color 0.2s;border:1px solid var(--border-subtle);padding:0.4rem 1rem;border-radius:100px;background:none;font-family:'Cabinet Grotesk',sans-serif}
+.nav-logout:hover{color:var(--white);border-color:rgba(255,255,255,0.2)}
+
+/* ── APP LAYOUT ── */
+.app{padding-top:72px;min-height:100vh}
+
+/* ── LOGIN ── */
+.login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;position:relative}
+.login-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.03) 1px,transparent 1px);background-size:60px 60px;pointer-events:none}
+.login-glow{position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(200,245,90,0.06) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+.login-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:3rem;width:100%;max-width:420px;position:relative;z-index:1;animation:fadeUp 0.5s ease both}
+.login-logo{font-family:'Clash Display',sans-serif;font-weight:700;font-size:1.6rem;letter-spacing:-0.02em;margin-bottom:0.25rem}
+.login-logo span{color:var(--accent)}
+.login-badge{display:inline-flex;align-items:center;gap:0.4rem;background:rgba(200,245,90,0.08);border:1px solid rgba(200,245,90,0.2);color:var(--accent);font-size:0.72rem;padding:0.25rem 0.7rem;border-radius:100px;margin-bottom:1.5rem}
+.login-sub{font-size:0.875rem;color:var(--dark-muted);margin-bottom:2rem;line-height:1.6}
+.login-label{font-size:0.8rem;color:var(--dark-muted);margin-bottom:0.5rem;display:block}
+.login-input{width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:var(--white);font-family:'Cabinet Grotesk',sans-serif;font-size:0.95rem;padding:0.85rem 1.25rem;border-radius:12px;outline:none;transition:border-color 0.2s;margin-bottom:1rem}
+.login-input::placeholder{color:var(--dark-muted)}
+.login-input:focus{border-color:rgba(200,245,90,0.4)}
+.login-btn{width:100%;background:var(--accent);color:var(--black);font-family:'Clash Display',sans-serif;font-weight:700;font-size:0.95rem;padding:0.9rem;border-radius:12px;border:none;cursor:pointer;transition:all 0.2s;margin-top:0.5rem}
+.login-btn:hover{background:var(--accent-dark)}
+.login-note{font-size:0.78rem;color:var(--dark-muted);text-align:center;margin-top:1.25rem}
+.login-link{font-size:0.8rem;color:var(--dark-muted);cursor:pointer;transition:color 0.2s}
+.login-link:hover{color:var(--accent)}
+.login-error{font-size:0.8rem;color:#ef4444;min-height:1.2rem;margin-bottom:0.5rem}
+
+/* ── PORTAL LAYOUT ── */
+.portal{max-width:1100px;margin:0 auto;padding:3rem 2rem;display:none}
+.portal-header{margin-bottom:2.5rem;animation:fadeUp 0.5s ease both}
+.portal-label{font-size:0.78rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:0.5rem}
+.portal-title{font-family:'Clash Display',sans-serif;font-weight:600;font-size:1.75rem;letter-spacing:-0.02em}
+.portal-sub{font-size:0.9rem;color:var(--dark-muted);margin-top:0.3rem}
+
+/* ── TABS ── */
+.portal-tabs{display:flex;gap:0.5rem;margin-bottom:2.5rem;border-bottom:1px solid var(--border-subtle);animation:fadeUp 0.5s 0.05s ease both;opacity:0}
+.ptab{font-family:'Clash Display',sans-serif;font-size:0.875rem;font-weight:600;padding:0.75rem 1.25rem;cursor:pointer;color:var(--dark-muted);border-bottom:2px solid transparent;transition:all 0.2s;margin-bottom:-1px}
+.ptab:hover{color:var(--white)}
+.ptab.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* ── TAB PANELS ── */
+.tab-panel{display:none;animation:fadeUp 0.4s ease both}
+.tab-panel.active{display:block}
+
+/* ── PROFILE PANEL ── */
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.profile-card{background:var(--surface);border:1px solid var(--border-subtle);border-radius:16px;padding:1.75rem}
+.profile-card-title{font-family:'Clash Display',sans-serif;font-weight:600;font-size:0.95rem;color:var(--white);margin-bottom:1.25rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border-subtle)}
+.form-group{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1rem}
+.form-label{font-size:0.8rem;color:var(--dark-muted);font-weight:500}
+.form-input{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:var(--white);font-family:'Cabinet Grotesk',sans-serif;font-size:0.9rem;padding:0.75rem 1rem;border-radius:10px;outline:none;transition:border-color 0.2s;width:100%}
+.form-input::placeholder{color:var(--dark-muted)}
+.form-input:focus{border-color:rgba(200,245,90,0.4)}
+.form-input option{background:var(--black)}
+.form-textarea{min-height:80px;resize:vertical;line-height:1.6}
+.save-btn{background:var(--accent);color:var(--black);font-family:'Clash Display',sans-serif;font-weight:700;font-size:0.85rem;padding:0.65rem 1.5rem;border-radius:100px;border:none;cursor:pointer;transition:all 0.2s;margin-top:0.5rem}
+.save-btn:hover{background:var(--accent-dark);transform:translateY(-1px)}
+.save-indicator{font-size:0.78rem;color:var(--accent);margin-left:0.75rem;opacity:0;transition:opacity 0.3s;display:inline-block}
+.save-indicator.show{opacity:1}
+
+/* ── RESUME UPLOAD ── */
+.resume-upload-area{border:2px dashed rgba(255,255,255,0.15);border-radius:12px;padding:2rem;text-align:center;cursor:pointer;transition:all 0.2s;margin-bottom:1rem;position:relative}
+.resume-upload-area:hover{border-color:rgba(200,245,90,0.4);background:rgba(200,245,90,0.03)}
+.resume-upload-area.has-file{border-color:rgba(200,245,90,0.4);background:rgba(200,245,90,0.05)}
+.resume-upload-icon{font-size:2rem;margin-bottom:0.5rem;opacity:0.6}
+.resume-upload-text{font-size:0.875rem;color:var(--dark-muted)}
+.resume-upload-text span{color:var(--accent);cursor:pointer}
+.resume-file-name{font-size:0.85rem;color:var(--accent);margin-top:0.5rem;font-weight:500}
+.resume-file-input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.resume-current{background:rgba(200,245,90,0.06);border:1px solid rgba(200,245,90,0.2);border-radius:10px;padding:1rem;display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem}
+.resume-current-icon{font-size:1.25rem}
+.resume-current-info{flex:1}
+.resume-current-name{font-size:0.875rem;color:var(--white);font-weight:500}
+.resume-current-sub{font-size:0.75rem;color:var(--dark-muted);margin-top:0.15rem}
+
+/* ── APPLICATIONS PANEL ── */
+.applications-list{display:flex;flex-direction:column;gap:1rem}
+.application-card{background:var(--surface);border:1px solid var(--border-subtle);border-radius:16px;padding:1.5rem;transition:all 0.2s}
+.application-card:hover{background:var(--surface-hover);border-color:rgba(200,245,90,0.15)}
+.application-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.25rem}
+.application-role-name{font-family:'Clash Display',sans-serif;font-weight:600;font-size:1.05rem}
+.application-company{font-size:0.82rem;color:var(--dark-muted);margin-top:0.2rem}
+.application-meta{display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:0.5rem}
+.application-tag{font-size:0.75rem;color:var(--dark-muted);background:rgba(255,255,255,0.05);border:1px solid var(--border-subtle);padding:0.25rem 0.65rem;border-radius:100px}
+.application-status-badge{font-size:0.75rem;font-weight:500;padding:0.3rem 0.85rem;border-radius:100px;white-space:nowrap;flex-shrink:0}
+.status-applied{background:rgba(255,255,255,0.06);color:var(--dark-muted);border:1px solid var(--border-subtle)}
+.status-reviewing{background:rgba(59,130,246,0.1);color:#93c5fd;border:1px solid rgba(59,130,246,0.2)}
+.status-shortlisted{background:rgba(200,245,90,0.1);color:var(--accent);border:1px solid rgba(200,245,90,0.2)}
+.status-interview{background:rgba(245,158,11,0.1);color:#fcd34d;border:1px solid rgba(245,158,11,0.2)}
+.status-offer{background:rgba(34,197,94,0.1);color:#86efac;border:1px solid rgba(34,197,94,0.2)}
+.status-unsuccessful{background:rgba(239,68,68,0.08);color:#f87171;border:1px solid rgba(239,68,68,0.2)}
+.application-score-row{display:flex;align-items:center;gap:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border-subtle)}
+.application-score{font-family:'Clash Display',sans-serif;font-weight:700;font-size:1.5rem;color:var(--accent)}
+.application-score-label{font-size:0.78rem;color:var(--dark-muted)}
+.score-dims-mini{display:flex;gap:1rem;flex:1}
+.score-dim-mini{display:flex;flex-direction:column;gap:0.2rem;min-width:70px}
+.score-dim-mini-label{font-size:0.68rem;color:var(--dark-muted);text-transform:uppercase;letter-spacing:0.05em}
+.score-dim-mini-bar{height:4px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden}
+.score-dim-mini-fill{height:100%;background:var(--accent);border-radius:2px}
+.score-dim-mini-val{font-family:'Clash Display',sans-serif;font-weight:700;font-size:0.82rem;color:var(--white)}
+.application-feedback{margin-top:1.25rem;background:rgba(255,255,255,0.03);border-radius:10px;padding:1rem}
+.application-feedback-label{font-size:0.7rem;color:var(--dark-muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.4rem}
+.application-feedback-text{font-size:0.875rem;color:rgba(255,255,255,0.65);line-height:1.7}
+.no-applications{text-align:center;padding:4rem 2rem}
+.no-applications-icon{font-size:2.5rem;margin-bottom:1rem;opacity:0.4}
+.no-applications-title{font-family:'Clash Display',sans-serif;font-weight:600;font-size:1rem;color:rgba(255,255,255,0.3);margin-bottom:0.5rem}
+.no-applications-sub{font-size:0.85rem;color:var(--dark-muted)}
+
+/* ── PSYCHOMETRIC PANEL ── */
+.psych-hero{background:var(--surface);border:1px solid var(--border-subtle);border-radius:16px;padding:2rem;margin-bottom:1.5rem;display:flex;align-items:flex-start;justify-content:space-between;gap:2rem}
+.psych-type-name{font-family:'Clash Display',sans-serif;font-weight:700;font-size:1.5rem;letter-spacing:-0.02em;color:var(--white)}
+.psych-type-sub{font-size:0.9rem;color:var(--dark-muted);margin-top:0.3rem;line-height:1.6;max-width:480px}
+.psych-archetype-badge{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(200,245,90,0.1);border:1px solid rgba(200,245,90,0.2);color:var(--accent);font-size:0.78rem;font-weight:500;padding:0.35rem 0.9rem;border-radius:100px;margin-bottom:0.75rem}
+.psych-score-circle{width:80px;height:80px;border-radius:50%;background:rgba(200,245,90,0.1);border:2px solid rgba(200,245,90,0.3);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
+.psych-score-num{font-family:'Clash Display',sans-serif;font-weight:700;font-size:1.6rem;color:var(--accent);line-height:1}
+.psych-score-label{font-size:0.6rem;color:var(--dark-muted);text-align:center;line-height:1.3}
+.ocean-section{background:var(--surface);border:1px solid var(--border-subtle);border-radius:16px;padding:1.75rem;margin-bottom:1.5rem}
+.ocean-section-title{font-family:'Clash Display',sans-serif;font-weight:600;font-size:0.9rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);margin-bottom:1.5rem}
+.ocean-traits{display:flex;flex-direction:column;gap:1.25rem}
+.ocean-trait-row{display:grid;grid-template-columns:120px 1fr 40px;align-items:center;gap:1rem}
+.ocean-trait-name{font-size:0.85rem;color:var(--dark-muted)}
+.ocean-trait-bar{height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden}
+.ocean-trait-fill{height:100%;background:linear-gradient(90deg,var(--accent),rgba(200,245,90,0.6));border-radius:4px;transition:width 1s ease}
+.ocean-trait-val{font-family:'Clash Display',sans-serif;font-weight:700;font-size:0.9rem;color:var(--white);text-align:right}
+.psych-insights{background:var(--surface);border:1px solid var(--border-subtle);border-radius:16px;padding:1.75rem}
+.psych-insights-title{font-family:'Clash Display',sans-serif;font-weight:600;font-size:0.9rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);margin-bottom:1.25rem}
+.psych-insight-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.psych-insight-card{background:rgba(255,255,255,0.03);border-radius:12px;padding:1.25rem}
+.psych-insight-icon{font-size:1.2rem;margin-bottom:0.5rem}
+.psych-insight-title{font-family:'Clash Display',sans-serif;font-weight:500;font-size:0.875rem;color:var(--white);margin-bottom:0.4rem}
+.psych-insight-text{font-size:0.82rem;color:var(--dark-muted);line-height:1.6}
+.no-psych{text-align:center;padding:4rem 2rem}
+.no-psych-icon{font-size:2.5rem;margin-bottom:1rem;opacity:0.4}
+.no-psych-title{font-family:'Clash Display',sans-serif;font-weight:600;font-size:1rem;color:rgba(255,255,255,0.3);margin-bottom:0.5rem}
+.no-psych-sub{font-size:0.85rem;color:var(--dark-muted);line-height:1.7;max-width:380px;margin:0 auto}
+
+/* ── JOB DISCOVERY PANEL ── */
+.discovery-header{display:flex;align-items:flex-start;justify-content:space-between;gap:2rem;margin-bottom:2rem}
+.discovery-header-left h3{font-family:'Clash Display',sans-serif;font-weight:600;font-size:1.1rem;margin-bottom:0.4rem}
+.discovery-header-left p{font-size:0.875rem;color:var(--dark-muted);line-height:1.6}
+.discovery-filters{display:flex;gap:0.75rem;flex-wrap:wrap;margin-bottom:1.75rem;padding-bottom:1.75rem;border-bottom:1px solid var(--border-subtle)}
+.filter-pill{font-size:0.78rem;font-family:'Cabinet Grotesk',sans-serif;font-weight:500;padding:0.4rem 0.9rem;border-radius:100px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04);color:var(--dark-muted);cursor:pointer;transition:all 0.2s}
+.filter-pill:hover{border-color:rgba(200,245,90,0.3);color:var(--white)}
+.filter-pill.active{background:rgba(200,245,90,0.1);border-color:rgba(200,245,90,0.3);color:var(--accent)}
+.discovery-search{background:var(--surface);border:1px solid var(--border-subtle);color:var(--white);font-family:'Cabinet Grotesk',sans-serif;font-size:0.875rem;padding:0.65rem 1.1rem;border-radius:100px;outline:none;width:260px;transition:border-color 0.2s}
+.discovery-search::placeholder{color:var(--dark-muted)}
+.discovery-search:focus{border-color:rgba(200,245,90,0.3)}
+.roles-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.role-discovery-card{background:var(--surface);border:1px solid var(--border-subtle);border-radius:16px;padding:1.5rem;transition:all 0.2s;cursor:pointer;position:relative}
+.role-discovery-card:hover{background:var(--surface-hover);border-color:rgba(200,245,90,0.25);transform:translateY(-2px)}
+.role-discovery-card.matched{border-color:rgba(200,245,90,0.3);background:rgba(200,245,90,0.03)}
+.match-badge{position:absolute;top:1rem;right:1rem;background:rgba(200,245,90,0.15);color:var(--accent);font-size:0.7rem;font-weight:500;padding:0.2rem 0.6rem;border-radius:100px;border:1px solid rgba(200,245,90,0.25)}
+.role-disc-title{font-family:'Clash Display',sans-serif;font-weight:600;font-size:1rem;color:var(--white);margin-bottom:0.3rem}
+.role-disc-meta{font-size:0.8rem;color:var(--dark-muted);margin-bottom:1rem}
+.role-disc-tags{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem}
+.role-disc-tag{font-size:0.72rem;color:var(--dark-muted);background:rgba(255,255,255,0.05);border:1px solid var(--border-subtle);padding:0.2rem 0.6rem;border-radius:100px}
+.role-disc-footer{display:flex;align-items:center;justify-content:space-between;padding-top:1rem;border-top:1px solid var(--border-subtle)}
+.role-disc-match-score{font-family:'Clash Display',sans-serif;font-weight:700;font-size:0.95rem;color:var(--accent)}
+.role-disc-match-label{font-size:0.72rem;color:var(--dark-muted)}
+.apply-link{font-family:'Clash Display',sans-serif;font-weight:600;font-size:0.78rem;color:var(--dark-muted);transition:color 0.2s}
+.role-discovery-card:hover .apply-link{color:var(--accent)}
+
+/* ── PREFERENCES ── */
+.pref-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1.5rem}
+.pref-section{background:var(--surface);border:1px solid var(--border-subtle);border-radius:14px;padding:1.5rem}
+.pref-section-title{font-family:'Clash Display',sans-serif;font-weight:600;font-size:0.85rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:1rem}
+.checkbox-grid{display:flex;flex-direction:column;gap:0.6rem}
+.checkbox-item{display:flex;align-items:center;gap:0.75rem;font-size:0.875rem;color:rgba(255,255,255,0.75);cursor:pointer}
+.checkbox-item input[type=checkbox]{accent-color:var(--accent);width:16px;height:16px;cursor:pointer}
+
+/* ── LOADING ── */
+.spinner{width:24px;height:24px;border:2px solid var(--border-subtle);border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite;margin:0 auto}
+.loading-overlay{display:flex;align-items:center;justify-content:center;padding:3rem}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(100px);background:rgba(200,245,90,0.15);border:1px solid rgba(200,245,90,0.3);color:var(--accent);font-size:0.875rem;padding:0.75rem 1.5rem;border-radius:100px;z-index:999;transition:transform 0.3s ease;pointer-events:none;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+@media(max-width:768px){
+  nav{padding:1rem 1.5rem}
+  .portal{padding:2rem 1rem}
+  .portal-tabs{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .profile-grid{grid-template-columns:1fr}
+  .ocean-trait-row{grid-template-columns:90px 1fr 36px}
+  .psych-insight-grid{grid-template-columns:1fr}
+  .roles-grid{grid-template-columns:1fr}
+  .pref-grid{grid-template-columns:1fr}
+  .psych-hero{flex-direction:column}
+  .discovery-header{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<nav>
+  <div class="nav-logo" onclick="window.location='https://roleiq.org'">ROLE<span>IQ</span></div>
+  <div class="nav-right">
+    <div class="nav-user" id="nav-user" style="display:none">
+      <div class="nav-avatar" id="nav-avatar">MS</div>
+      <span id="nav-name"></span>
+    </div>
+    <button class="nav-logout" id="nav-logout" style="display:none" onclick="logout()">Sign out</button>
+  </div>
+</nav>
+
+<div class="app" id="app">
+
+  <!-- ── LOGIN ── -->
+  <div id="login-screen" class="login-screen">
+    <div class="login-grid"></div>
+    <div class="login-glow"></div>
+    <div class="login-card">
+      <div class="login-logo">ROLE<span>IQ</span></div>
+      <div class="login-badge">Applicant Portal</div>
+      <div class="login-sub">Sign in to track your applications, view your assessment results, and discover matching roles.</div>
+      <label class="login-label">Email</label>
+      <input class="login-input" type="email" id="login-email" placeholder="you@email.com" />
+      <label class="login-label">Password</label>
+      <input class="login-input" type="password" id="login-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()" />
+      <div class="login-error" id="login-error"></div>
+      <button class="login-btn" id="login-btn" onclick="doLogin()">Sign in</button>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:1.25rem">
+        <span class="login-link" onclick="showScreen('reset-screen')">Forgot password?</span>
+        <span class="login-link" onclick="showScreen('register-screen')">Create account →</span>
+      </div>
+      <div class="login-note">Looking for the recruiter dashboard? <a href="https://app.roleiq.org" style="color:var(--accent)">Sign in here →</a></div>
+    </div>
+  </div>
+
+  <!-- ── REGISTER ── -->
+  <div id="register-screen" class="login-screen" style="display:none">
+    <div class="login-grid"></div>
+    <div class="login-glow"></div>
+    <div class="login-card">
+      <div class="login-logo">ROLE<span>IQ</span></div>
+      <div class="login-badge">Create Account</div>
+      <div class="login-sub">Create your applicant profile to track applications and receive personalised role matches.</div>
+      <label class="login-label">Full name *</label>
+      <input class="login-input" type="text" id="reg-name" placeholder="Jane Smith" />
+      <label class="login-label">Email *</label>
+      <input class="login-input" type="email" id="reg-email" placeholder="you@email.com" />
+      <label class="login-label">Password *</label>
+      <input class="login-input" type="password" id="reg-password" placeholder="Min. 6 characters" />
+      <div class="login-error" id="reg-error"></div>
+      <button class="login-btn" id="register-btn" onclick="doRegister()">Create account</button>
+      <div style="text-align:center;margin-top:1.25rem">
+        <span class="login-link" onclick="showScreen('login-screen')">← Back to sign in</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── RESET ── -->
+  <div id="reset-screen" class="login-screen" style="display:none">
+    <div class="login-grid"></div>
+    <div class="login-glow"></div>
+    <div class="login-card">
+      <div class="login-logo">ROLE<span>IQ</span></div>
+      <div class="login-sub">Enter your email and we'll send a reset link.</div>
+      <label class="login-label">Email</label>
+      <input class="login-input" type="email" id="reset-email" placeholder="you@email.com" />
+      <div id="reset-msg" style="font-size:0.8rem;min-height:1.2rem;margin-bottom:0.5rem"></div>
+      <button class="login-btn" id="reset-btn" onclick="doReset()">Send reset link</button>
+      <div style="text-align:center;margin-top:1.25rem">
+        <span class="login-link" onclick="showScreen('login-screen')">← Back to sign in</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PORTAL ── -->
+  <div id="portal" class="portal">
+    <div class="portal-header">
+      <div class="portal-label">Applicant Portal</div>
+      <div class="portal-title" id="portal-welcome">Welcome back</div>
+      <div class="portal-sub">Your applications, assessments, and role matches — all in one place.</div>
+    </div>
+
+    <div class="portal-tabs">
+      <div class="ptab active" id="ptab-profile" onclick="switchTab('profile')">My Profile</div>
+      <div class="ptab" id="ptab-applications" onclick="switchTab('applications')">Applications</div>
+      <div class="ptab" id="ptab-psychometric" onclick="switchTab('psychometric')">Psychometric Results</div>
+      <div class="ptab" id="ptab-roles" onclick="switchTab('roles')">Discover Roles</div>
+    </div>
+
+    <!-- ── PROFILE TAB ── -->
+    <div class="tab-panel active" id="panel-profile">
+      <div class="profile-grid">
+        <!-- Personal Details -->
+        <div class="profile-card">
+          <div class="profile-card-title">Personal Details</div>
+          <div class="form-group">
+            <label class="form-label">Full name</label>
+            <input class="form-input" type="text" id="p-name" placeholder="Jane Smith" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input class="form-input" type="email" id="p-email" placeholder="jane@email.com" readonly style="opacity:0.6" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone</label>
+            <input class="form-input" type="tel" id="p-phone" placeholder="+61 400 000 000" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Location</label>
+            <input class="form-input" type="text" id="p-location" placeholder="Sydney, NSW" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Current role / title</label>
+            <input class="form-input" type="text" id="p-current-role" placeholder="Senior Account Manager" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Years of experience</label>
+            <select class="form-input" id="p-experience">
+              <option value="">Select range</option>
+              <option>0–2 years</option>
+              <option>3–5 years</option>
+              <option>6–10 years</option>
+              <option>11–15 years</option>
+              <option>15+ years</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">LinkedIn profile (optional)</label>
+            <input class="form-input" type="url" id="p-linkedin" placeholder="linkedin.com/in/yourname" />
+          </div>
+          <button class="save-btn" onclick="saveProfile()">Save details</button>
+          <span class="save-indicator" id="profile-saved">✓ Saved</span>
+        </div>
+
+        <!-- Resume Upload -->
+        <div>
+          <div class="profile-card" style="margin-bottom:1.5rem">
+            <div class="profile-card-title">Resume / CV</div>
+            <div id="resume-current-wrap" style="display:none">
+              <div class="resume-current">
+                <div class="resume-current-icon">📄</div>
+                <div class="resume-current-info">
+                  <div class="resume-current-name" id="resume-file-name">—</div>
+                  <div class="resume-current-sub">Current resume on file</div>
+                </div>
+                <button onclick="clearResume()" style="background:none;border:none;color:var(--dark-muted);cursor:pointer;font-size:0.8rem;transition:color 0.2s" onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='var(--dark-muted)'">Remove</button>
+              </div>
+            </div>
+            <label class="resume-upload-area" id="resume-dropzone">
+              <input type="file" class="resume-file-input" id="resume-file-input" accept=".pdf,.doc,.docx" onchange="handleResumeUpload(this)" />
+              <div class="resume-upload-icon">📎</div>
+              <div class="resume-upload-text">Drag &amp; drop your resume, or <span>browse</span></div>
+              <div style="font-size:0.75rem;color:var(--dark-muted);margin-top:0.4rem">PDF, DOC, DOCX — max 5MB</div>
+            </label>
+            <div class="resume-file-name" id="resume-upload-status" style="display:none"></div>
+          </div>
+
+          <!-- About / Summary -->
+          <div class="profile-card">
+            <div class="profile-card-title">Professional Summary</div>
+            <div class="form-group">
+              <label class="form-label">Brief summary (optional)</label>
+              <textarea class="form-input form-textarea" id="p-summary" placeholder="A brief note about your background, strengths, and what you're looking for..."></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Key skills (comma-separated)</label>
+              <input class="form-input" type="text" id="p-skills" placeholder="Sales, Account Management, CRM, Negotiation" />
+            </div>
+            <button class="save-btn" onclick="saveSummary()">Save</button>
+            <span class="save-indicator" id="summary-saved">✓ Saved</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── APPLICATIONS TAB ── -->
+    <div class="tab-panel" id="panel-applications">
+      <div id="applications-loading" class="loading-overlay"><div class="spinner"></div></div>
+      <div id="applications-list-wrap" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem">
+          <div>
+            <h3 style="font-family:'Clash Display',sans-serif;font-weight:600;font-size:1.1rem">Your Applications</h3>
+            <p style="font-size:0.85rem;color:var(--dark-muted);margin-top:0.2rem" id="app-count">Loading...</p>
+          </div>
+        </div>
+        <div class="applications-list" id="applications-list"></div>
+      </div>
+    </div>
+
+    <!-- ── PSYCHOMETRIC TAB ── -->
+    <div class="tab-panel" id="panel-psychometric">
+      <div id="psych-loading" class="loading-overlay"><div class="spinner"></div></div>
+      <div id="psych-content" style="display:none"></div>
+      <div id="psych-empty" class="no-psych" style="display:none">
+        <div class="no-psych-icon">🧠</div>
+        <div class="no-psych-title">No assessment results yet</div>
+        <div class="no-psych-sub">Your psychometric assessment results will appear here once you've completed an assessment for one of your role applications. Results include your OCEAN personality profile, archetype classification, and personalised insights.</div>
+      </div>
+    </div>
+
+    <!-- ── ROLES TAB ── -->
+    <div class="tab-panel" id="panel-roles">
+      <div class="discovery-header">
+        <div class="discovery-header-left">
+          <h3>Discover Matching Roles</h3>
+          <p>Roles on ROLEIQ that match your profile, experience, and stated preferences. Updated as new roles go live.</p>
+        </div>
+        <input class="discovery-search" type="text" placeholder="Search roles..." oninput="filterRoleDiscovery(this.value)" />
+      </div>
+
+      <!-- Preferences -->
+      <div style="background:var(--surface);border:1px solid var(--border-subtle);border-radius:14px;padding:1.5rem;margin-bottom:1.75rem">
+        <div style="font-family:'Clash Display',sans-serif;font-weight:600;font-size:0.85rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:1rem">Role Preferences</div>
+        <div class="pref-grid">
+          <div>
+            <div style="font-size:0.8rem;color:var(--dark-muted);margin-bottom:0.75rem;font-weight:500">Employment type</div>
+            <div class="checkbox-grid">
+              <label class="checkbox-item"><input type="checkbox" id="pref-fulltime" onchange="savePreferences()"> Full-time</label>
+              <label class="checkbox-item"><input type="checkbox" id="pref-parttime" onchange="savePreferences()"> Part-time</label>
+              <label class="checkbox-item"><input type="checkbox" id="pref-contract" onchange="savePreferences()"> Contract / Temporary</label>
+              <label class="checkbox-item"><input type="checkbox" id="pref-casual" onchange="savePreferences()"> Casual</label>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:0.8rem;color:var(--dark-muted);margin-bottom:0.75rem;font-weight:500">Work arrangement</div>
+            <div class="checkbox-grid">
+              <label class="checkbox-item"><input type="checkbox" id="pref-onsite" onchange="savePreferences()"> On-site</label>
+              <label class="checkbox-item"><input type="checkbox" id="pref-hybrid" onchange="savePreferences()"> Hybrid</label>
+              <label class="checkbox-item"><input type="checkbox" id="pref-remote" onchange="savePreferences()"> Remote</label>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:0.8rem;color:var(--dark-muted);margin-bottom:0.75rem;font-weight:500">Salary expectation</div>
+            <select class="form-input" id="pref-salary" onchange="savePreferences()" style="max-width:250px">
+              <option value="">Not specified</option>
+              <option>$50,000 – $70,000</option>
+              <option>$70,000 – $90,000</option>
+              <option>$90,000 – $120,000</option>
+              <option>$120,000 – $150,000</option>
+              <option>$150,000+</option>
+            </select>
+          </div>
+          <div>
+            <div style="font-size:0.8rem;color:var(--dark-muted);margin-bottom:0.75rem;font-weight:500">Preferred location</div>
+            <input class="form-input" type="text" id="pref-location" placeholder="Sydney, Melbourne, Remote..." onchange="savePreferences()" style="max-width:250px" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Role filters -->
+      <div class="discovery-filters">
+        <div class="filter-pill active" onclick="filterByCategory('all',this)">All roles</div>
+        <div class="filter-pill" onclick="filterByCategory('matched',this)">Best match ✦</div>
+        <div class="filter-pill" onclick="filterByCategory('Sales',this)">Sales</div>
+        <div class="filter-pill" onclick="filterByCategory('Operations',this)">Operations</div>
+        <div class="filter-pill" onclick="filterByCategory('Management',this)">Management</div>
+        <div class="filter-pill" onclick="filterByCategory('Recruitment',this)">Recruitment</div>
+        <div class="filter-pill" onclick="filterByCategory('Finance',this)">Finance</div>
+        <div class="filter-pill" onclick="filterByCategory('Technology',this)">Technology</div>
+      </div>
+
+      <div id="roles-discovery-loading" class="loading-overlay"><div class="spinner"></div></div>
+      <div class="roles-grid" id="roles-discovery-grid" style="display:none"></div>
+      <div id="roles-empty" style="display:none;text-align:center;padding:3rem 2rem;color:var(--dark-muted)">
+        <div style="font-size:2rem;margin-bottom:0.75rem;opacity:0.4">🔍</div>
+        <div style="font-family:'Clash Display',sans-serif;font-size:0.9rem;color:rgba(255,255,255,0.3)">No matching roles found</div>
+      </div>
+    </div>
+
+  </div><!-- end portal -->
+
+</div><!-- end app -->
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, sendPasswordResetEmail, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js';
+
+// ─── CONFIG ───────────────────────────────────────────────────────────────────
+const firebaseConfig = {
+  apiKey: "AIzaSyBkTh5IGB-JEzo0auRDFo9zMT7AqHNB_ho",
+  authDomain: "role-iq.firebaseapp.com",
+  projectId: "role-iq",
+  storageBucket: "role-iq.firebasestorage.app",
+  messagingSenderId: "63190984588",
+  appId: "1:63190984588:web:39d188deed189b98db18a9"
+};
+const AIRTABLE_TOKEN = 'patKKgDHTuITrEN7p.706459952164540091e20bf0863599c0e5d9837fd3cf87131468d7039df2250c';
+const BASE_ID = 'appCSa4K8LGPg1ovO';
+const CANDIDATES_TABLE = 'Candidates_New';
+const ROLES_TABLE = 'Roles_New';
+
+const firebaseApp = initializeApp(firebaseConfig);
+const auth = getAuth(firebaseApp);
+
+// ─── STATE ────────────────────────────────────────────────────────────────────
+let currentUser = null;
+let myApplications = [];
+let allOpenRoles = [];
+let activeCategory = 'all';
+let profileData = {};
+
+// ─── UTILS ────────────────────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function showScreen(screen) {
+  ['login-screen','register-screen','reset-screen'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+  document.getElementById('portal').style.display = 'none';
+  const el = document.getElementById(screen);
+  if (el) {
+    el.style.display = ['login-screen','register-screen','reset-screen'].includes(screen) ? 'flex' : 'block';
+  }
+}
+
+function getInitials(name) {
+  if (!name) return '?';
+  return name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+}
+
+function localStorageKey(uid, key) {
+  return `roleiq_applicant_${uid}_${key}`;
+}
+
+function saveLocal(key, value) {
+  if (!currentUser) return;
+  localStorage.setItem(localStorageKey(currentUser.uid, key), JSON.stringify(value));
+}
+
+function loadLocal(key, fallback = null) {
+  if (!currentUser) return fallback;
+  try {
+    const item = localStorage.getItem(localStorageKey(currentUser.uid, key));
+    return item ? JSON.parse(item) : fallback;
+  } catch { return fallback; }
+}
+
+// ─── AUTH ─────────────────────────────────────────────────────────────────────
+async function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  const btn = document.getElementById('login-btn');
+  const err = document.getElementById('login-error');
+  err.textContent = '';
+  btn.textContent = 'Signing in...';
+  btn.disabled = true;
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+  } catch (e) {
+    err.textContent = 'Invalid email or password. Please try again.';
+    btn.textContent = 'Sign in';
+    btn.disabled = false;
+  }
+}
+
+async function doRegister() {
+  const name = document.getElementById('reg-name').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const password = document.getElementById('reg-password').value;
+  const btn = document.getElementById('register-btn');
+  const err = document.getElementById('reg-error');
+  err.textContent = '';
+  if (!name || !email || !password) { err.textContent = 'All fields are required.'; return; }
+  if (password.length < 6) { err.textContent = 'Password must be at least 6 characters.'; return; }
+  btn.textContent = 'Creating account...';
+  btn.disabled = true;
+  try {
+    const cred = await createUserWithEmailAndPassword(auth, email, password);
+    await updateProfile(cred.user, { displayName: name });
+  } catch (e) {
+    let msg = 'Something went wrong. Please try again.';
+    if (e.code === 'auth/email-already-in-use') msg = 'An account with this email already exists.';
+    if (e.code === 'auth/invalid-email') msg = 'Please enter a valid email address.';
+    err.textContent = msg;
+    btn.textContent = 'Create account';
+    btn.disabled = false;
+  }
+}
+
+async function doReset() {
+  const email = document.getElementById('reset-email').value.trim();
+  const btn = document.getElementById('reset-btn');
+  const msg = document.getElementById('reset-msg');
+  if (!email) { msg.textContent = 'Please enter your email address.'; msg.style.color = '#ef4444'; return; }
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+  try {
+    await sendPasswordResetEmail(auth, email);
+    msg.textContent = 'Reset link sent — check your inbox.';
+    msg.style.color = 'var(--accent)';
+    btn.textContent = 'Sent ✓';
+  } catch (e) {
+    msg.textContent = 'Could not find an account with that email.';
+    msg.style.color = '#ef4444';
+    btn.textContent = 'Send reset link';
+    btn.disabled = false;
+  }
+}
+
+async function logout() {
+  await signOut(auth);
+}
+
+// ─── AUTH STATE ───────────────────────────────────────────────────────────────
+onAuthStateChanged(auth, user => {
+  if (user) {
+    currentUser = user;
+    const name = user.displayName || user.email.split('@')[0];
+    const initials = getInitials(name);
+    document.getElementById('nav-user').style.display = 'flex';
+    document.getElementById('nav-logout').style.display = 'block';
+    document.getElementById('nav-avatar').textContent = initials;
+    document.getElementById('nav-name').textContent = name;
+    document.getElementById('portal-welcome').textContent = 'Welcome back, ' + name.split(' ')[0];
+    showScreen('portal');
+    document.getElementById('portal').style.display = 'block';
+    loadPortalData();
+  } else {
+    currentUser = null;
+    document.getElementById('nav-user').style.display = 'none';
+    document.getElementById('nav-logout').style.display = 'none';
+    showScreen('login-screen');
+  }
+});
+
+// ─── DATA LOADING ─────────────────────────────────────────────────────────────
+async function loadPortalData() {
+  loadProfileFromLocal();
+  loadApplications();
+  loadOpenRoles();
+}
+
+async function fetchAirtable(table, formula = '') {
+  let url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(table)}?pageSize=100`;
+  if (formula) url += `&filterByFormula=${encodeURIComponent(formula)}`;
+  const res = await fetch(url, { headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` } });
+  if (!res.ok) throw new Error('Airtable fetch failed');
+  const data = await res.json();
+  return data.records || [];
+}
+
+async function loadApplications() {
+  const email = currentUser.email.toLowerCase();
+  try {
+    const records = await fetchAirtable(CANDIDATES_TABLE, `LOWER({Email}) = "${email}"`);
+    myApplications = records;
+    renderApplications();
+    renderPsychometric();
+  } catch (e) {
+    // Try matching by name if email field doesn't exist
+    myApplications = [];
+    renderApplications();
+    renderPsychometric();
+  }
+}
+
+async function loadOpenRoles() {
+  try {
+    const records = await fetchAirtable(ROLES_TABLE, `{Status} = "Active"`);
+    allOpenRoles = records;
+    renderRoleDiscovery(allOpenRoles);
+  } catch (e) {
+    allOpenRoles = getDemoRoles();
+    renderRoleDiscovery(allOpenRoles);
+  }
+}
+
+// ─── PROFILE ──────────────────────────────────────────────────────────────────
+function loadProfileFromLocal() {
+  profileData = loadLocal('profile', {});
+  const fields = ['name','phone','location','current-role','experience','linkedin','summary','skills'];
+  fields.forEach(f => {
+    const el = document.getElementById('p-' + f);
+    if (el && profileData[f]) el.value = profileData[f];
+  });
+  document.getElementById('p-email').value = currentUser.email;
+  if (!document.getElementById('p-name').value && currentUser.displayName) {
+    document.getElementById('p-name').value = currentUser.displayName;
+  }
+
+  // Resume
+  const resumeFile = loadLocal('resume_name', null);
+  if (resumeFile) {
+    document.getElementById('resume-file-name').textContent = resumeFile;
+    document.getElementById('resume-current-wrap').style.display = 'block';
+  }
+
+  // Preferences
+  const prefs = loadLocal('preferences', {});
+  ['fulltime','parttime','contract','casual','onsite','hybrid','remote'].forEach(k => {
+    const el = document.getElementById('pref-' + k);
+    if (el) el.checked = prefs[k] || false;
+  });
+  if (prefs.salary) document.getElementById('pref-salary').value = prefs.salary;
+  if (prefs.location) document.getElementById('pref-location').value = prefs.location;
+}
+
+function saveProfile() {
+  const fields = ['name','phone','location','current-role','experience','linkedin'];
+  fields.forEach(f => {
+    const el = document.getElementById('p-' + f);
+    if (el) profileData[f] = el.value;
+  });
+  saveLocal('profile', profileData);
+  const ind = document.getElementById('profile-saved');
+  ind.classList.add('show');
+  setTimeout(() => ind.classList.remove('show'), 2000);
+  showToast('Profile saved');
+}
+
+function saveSummary() {
+  profileData.summary = document.getElementById('p-summary').value;
+  profileData.skills = document.getElementById('p-skills').value;
+  saveLocal('profile', profileData);
+  const ind = document.getElementById('summary-saved');
+  ind.classList.add('show');
+  setTimeout(() => ind.classList.remove('show'), 2000);
+  showToast('Summary saved');
+}
+
+function savePreferences() {
+  const prefs = {
+    fulltime: document.getElementById('pref-fulltime').checked,
+    parttime: document.getElementById('pref-parttime').checked,
+    contract: document.getElementById('pref-contract').checked,
+    casual: document.getElementById('pref-casual').checked,
+    onsite: document.getElementById('pref-onsite').checked,
+    hybrid: document.getElementById('pref-hybrid').checked,
+    remote: document.getElementById('pref-remote').checked,
+    salary: document.getElementById('pref-salary').value,
+    location: document.getElementById('pref-location').value
+  };
+  saveLocal('preferences', prefs);
+  showToast('Preferences saved');
+  renderRoleDiscovery(allOpenRoles);
+}
+
+// ─── RESUME ───────────────────────────────────────────────────────────────────
+async function handleResumeUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) { showToast('File must be under 5MB'); return; }
+  const status = document.getElementById('resume-upload-status');
+  status.style.display = 'block';
+  status.textContent = `✓ ${file.name} uploaded`;
+  document.getElementById('resume-dropzone').classList.add('has-file');
+  document.getElementById('resume-file-name').textContent = file.name;
+  document.getElementById('resume-current-wrap').style.display = 'block';
+  saveLocal('resume_name', file.name);
+  showToast('Resume saved');
+}
+
+function clearResume() {
+  saveLocal('resume_name', null);
+  document.getElementById('resume-current-wrap').style.display = 'none';
+  document.getElementById('resume-dropzone').classList.remove('has-file');
+  document.getElementById('resume-upload-status').style.display = 'none';
+  document.getElementById('resume-file-input').value = '';
+  showToast('Resume removed');
+}
+
+// ─── APPLICATIONS ─────────────────────────────────────────────────────────────
+function renderApplications() {
+  document.getElementById('applications-loading').style.display = 'none';
+  document.getElementById('applications-list-wrap').style.display = 'block';
+
+  const list = document.getElementById('applications-list');
+  const count = document.getElementById('app-count');
+
+  if (!myApplications.length) {
+    count.textContent = '0 applications found';
+    list.innerHTML = `<div class="no-applications">
+      <div class="no-applications-icon">📋</div>
+      <div class="no-applications-title">No applications yet</div>
+      <div class="no-applications-sub">When you apply for roles through ROLEIQ, your applications and results will appear here. Explore open roles in the Discover tab.</div>
+    </div>`;
+    return;
+  }
+
+  count.textContent = `${myApplications.length} application${myApplications.length !== 1 ? 's' : ''}`;
+
+  list.innerHTML = myApplications.map(c => {
+    const f = c.fields;
+    const score = f['Overall ROLEIQ Score'] || 0;
+    const pFit = f['Personality Fit'] || f['Personality Fit Score'] || 0;
+    const cFit = f['Cognitive Fit Score'] || f['Cognitive Fit'] || 0;
+    const eFit = f['Experience Fit Score'] || f['Experience Fit'] || 0;
+    const rec = f['Recommendation'] === 'Yes';
+    const status = f['Application Status'] || (rec ? 'Shortlisted' : 'Applied');
+    const statusClass = getStatusClass(status);
+    const feedback = f['Recruiter Notes'] || f['Recruiter Feedback'] || '';
+    const reasoning = f['Reasoning Summary'] || '';
+
+    return `<div class="application-card">
+      <div class="application-header">
+        <div>
+          <div class="application-role-name">${f['Role Applied For'] || 'Role Application'}</div>
+          <div class="application-company">${f['Company'] || 'via ROLEIQ'}</div>
+          <div class="application-meta">
+            ${f['Location'] ? `<span class="application-tag">📍 ${f['Location']}</span>` : ''}
+            ${f['Employment Type'] ? `<span class="application-tag">${f['Employment Type']}</span>` : ''}
+            ${f['Date Applied'] ? `<span class="application-tag">Applied ${new Date(f['Date Applied']).toLocaleDateString('en-AU',{month:'short',day:'numeric'})}</span>` : ''}
+          </div>
+        </div>
+        <span class="application-status-badge ${statusClass}">${status}</span>
+      </div>
+      ${score ? `<div class="application-score-row">
+        <div>
+          <div class="application-score">${score}</div>
+          <div class="application-score-label">ROLEIQ Score</div>
+        </div>
+        <div class="score-dims-mini">
+          <div class="score-dim-mini">
+            <div class="score-dim-mini-label">Personality</div>
+            <div class="score-dim-mini-bar"><div class="score-dim-mini-fill" style="width:${pFit}%"></div></div>
+            <div class="score-dim-mini-val">${pFit}</div>
+          </div>
+          <div class="score-dim-mini">
+            <div class="score-dim-mini-label">Cognitive</div>
+            <div class="score-dim-mini-bar"><div class="score-dim-mini-fill" style="width:${cFit}%"></div></div>
+            <div class="score-dim-mini-val">${cFit}</div>
+          </div>
+          <div class="score-dim-mini">
+            <div class="score-dim-mini-label">Experience</div>
+            <div class="score-dim-mini-bar"><div class="score-dim-mini-fill" style="width:${eFit}%"></div></div>
+            <div class="score-dim-mini-val">${eFit}</div>
+          </div>
+        </div>
+        <div class="rec-badge ${rec ? '' : 'rec-badge-no'}" style="background:${rec ? 'rgba(200,245,90,0.1)' : 'rgba(239,68,68,0.08)'};color:${rec ? 'var(--accent)' : '#f87171'};border:1px solid ${rec ? 'rgba(200,245,90,0.2)' : 'rgba(239,68,68,0.2)'};font-size:0.78rem;font-weight:500;padding:0.3rem 0.75rem;border-radius:100px;display:inline-flex;align-items:center;gap:0.3rem">${rec ? '✓ Recommended for interview' : '✗ Not progressed'}</div>
+      </div>` : ''}
+      ${feedback ? `<div class="application-feedback">
+        <div class="application-feedback-label">Recruiter feedback</div>
+        <div class="application-feedback-text">${feedback}</div>
+      </div>` : reasoning ? `<div class="application-feedback">
+        <div class="application-feedback-label">ROLEIQ assessment summary</div>
+        <div class="application-feedback-text">${reasoning}</div>
+      </div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+function getStatusClass(status) {
+  const s = (status || '').toLowerCase();
+  if (s.includes('shortlist')) return 'status-shortlisted';
+  if (s.includes('interview')) return 'status-interview';
+  if (s.includes('offer')) return 'status-offer';
+  if (s.includes('review') || s.includes('assess')) return 'status-reviewing';
+  if (s.includes('unsuccessful') || s.includes('declined')) return 'status-unsuccessful';
+  return 'status-applied';
+}
+
+// ─── PSYCHOMETRIC ─────────────────────────────────────────────────────────────
+function renderPsychometric() {
+  document.getElementById('psych-loading').style.display = 'none';
+
+  // Find the most recent application with psychometric data
+  const withPsych = myApplications.filter(c => c.fields['OCEAN Profile'] || c.fields['Personality Type']);
+  if (!withPsych.length) {
+    document.getElementById('psych-empty').style.display = 'block';
+    return;
+  }
+
+  const latest = withPsych[0];
+  const f = latest.fields;
+  const score = f['Overall ROLEIQ Score'] || 0;
+  const personalityType = f['Personality Type'] || 'Personality Assessment';
+  const oceanRaw = f['OCEAN Profile'] || '';
+  const rec = f['Recommendation'] === 'Yes';
+  const reasoning = f['Reasoning Summary'] || '';
+
+  // Parse OCEAN string e.g. "O:7, C:8, E:6, A:7, N:5"
+  const oceanMap = {};
+  oceanRaw.split(',').forEach(part => {
+    const [k, v] = part.trim().split(':');
+    if (k && v) oceanMap[k.trim()] = parseInt(v.trim()) * 10; // convert to 0-100
+  });
+
+  const oceanTraits = [
+    { key: 'O', label: 'Openness', desc: 'Creativity, curiosity and openness to new experiences' },
+    { key: 'C', label: 'Conscientiousness', desc: 'Organisation, dependability and goal-driven behaviour' },
+    { key: 'E', label: 'Extraversion', desc: 'Sociability, assertiveness and positive emotions' },
+    { key: 'A', label: 'Agreeableness', desc: 'Cooperation, empathy and trust in others' },
+    { key: 'N', label: 'Neuroticism', desc: 'Emotional stability and stress response patterns' },
+  ];
+
+  const archetypeDescriptions = {
+    'Strategic Leader': 'You think in systems and outcomes. Decisive under pressure, you drive clarity in ambiguous situations and motivate through vision.',
+    'Collaborative Problem-Solver': 'You bring people together to solve complex challenges. Empathetic, resourceful, and trusted by teams.',
+    'Relationship Builder': 'Your strength is people. You create loyalty, trust, and long-term partnerships through genuine connection.',
+    'Analytical Driver': 'Data and logic guide your decisions. You find patterns others miss and turn complexity into clear action.',
+    'Pragmatic Executor': 'You get things done. Process-oriented and reliable, you turn strategy into delivery with minimal friction.',
+  };
+
+  const typeDesc = archetypeDescriptions[personalityType] || 'Your ROLEIQ psychometric profile captures your personality, working style, and behavioural tendencies as assessed during your application.';
+
+  const psychContent = document.getElementById('psych-content');
+  psychContent.style.display = 'block';
+  psychContent.innerHTML = `
+    <div class="psych-hero">
+      <div>
+        <div class="psych-archetype-badge">✦ Personality archetype</div>
+        <div class="psych-type-name">${personalityType}</div>
+        <div class="psych-type-sub">${typeDesc}</div>
+        <div style="margin-top:1rem;font-size:0.78rem;color:var(--dark-muted)">Based on your ROLEIQ assessment — ${latest.fields['Role Applied For'] ? `applied for <strong style="color:rgba(255,255,255,0.5)">${latest.fields['Role Applied For']}</strong>` : 'most recent assessment'}</div>
+      </div>
+      ${score ? `<div class="psych-score-circle">
+        <div class="psych-score-num">${score}</div>
+        <div class="psych-score-label">ROLEIQ<br>Score</div>
+      </div>` : ''}
+    </div>
+
+    ${Object.keys(oceanMap).length ? `<div class="ocean-section">
+      <div class="ocean-section-title">OCEAN Personality Profile</div>
+      <div class="ocean-traits">
+        ${oceanTraits.map(t => {
+          const val = oceanMap[t.key] || 0;
+          return `<div class="ocean-trait-row">
+            <div class="ocean-trait-name">${t.label}</div>
+            <div class="ocean-trait-bar"><div class="ocean-trait-fill" style="width:${val}%"></div></div>
+            <div class="ocean-trait-val">${val}</div>
+          </div>`;
+        }).join('')}
+      </div>
+      <div style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--border-subtle);font-size:0.8rem;color:var(--dark-muted);line-height:1.7">OCEAN (Openness, Conscientiousness, Extraversion, Agreeableness, Neuroticism) is a scientifically validated model of personality. Scores reflect your natural tendencies — there are no right or wrong results.</div>
+    </div>` : ''}
+
+    <div class="psych-insights">
+      <div class="psych-insights-title">Profile Insights</div>
+      <div class="psych-insight-grid">
+        <div class="psych-insight-card">
+          <div class="psych-insight-icon">💪</div>
+          <div class="psych-insight-title">Working style</div>
+          <div class="psych-insight-text">${getInsight('style', oceanMap, personalityType)}</div>
+        </div>
+        <div class="psych-insight-card">
+          <div class="psych-insight-icon">🤝</div>
+          <div class="psych-insight-title">Team dynamics</div>
+          <div class="psych-insight-text">${getInsight('team', oceanMap, personalityType)}</div>
+        </div>
+        <div class="psych-insight-card">
+          <div class="psych-insight-icon">🎯</div>
+          <div class="psych-insight-title">Ideal environment</div>
+          <div class="psych-insight-text">${getInsight('environment', oceanMap, personalityType)}</div>
+        </div>
+        <div class="psych-insight-card">
+          <div class="psych-insight-icon">📈</div>
+          <div class="psych-insight-title">Growth orientation</div>
+          <div class="psych-insight-text">${getInsight('growth', oceanMap, personalityType)}</div>
+        </div>
+      </div>
+      ${reasoning ? `<div style="margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border-subtle)">
+        <div style="font-size:0.7rem;color:var(--dark-muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.5rem">ROLEIQ assessment reasoning</div>
+        <div style="font-size:0.875rem;color:rgba(255,255,255,0.65);line-height:1.7">${reasoning}</div>
+      </div>` : ''}
+    </div>`;
+}
+
+function getInsight(type, ocean, archetype) {
+  const O = ocean['O'] || 50, C = ocean['C'] || 50, E = ocean['E'] || 50, A = ocean['A'] || 50, N = ocean['N'] || 50;
+  const insights = {
+    style: C > 60 ? 'Structured and goal-oriented. You plan methodically and deliver consistently under deadlines.' : E > 60 ? 'Energetic and collaborative. You thrive in dynamic environments and drive momentum in teams.' : 'Thoughtful and adaptive. You balance independent focus with collaborative input depending on context.',
+    team: A > 60 ? 'A natural collaborator — empathetic, diplomatically honest, and trusted to resolve tensions constructively.' : E > 60 ? 'Energising to work with. You bring enthusiasm, draw others in, and create forward momentum.' : 'Selectively collaborative — effective in focused partnerships and small teams with clear roles.',
+    environment: O > 60 ? 'Complex, evolving environments where creativity and novel thinking are valued over rigid procedure.' : C > 60 ? 'Structured settings with clear expectations, defined goals, and measurable outcomes.' : 'Balanced environments that blend process with autonomy, allowing you to own your workload.',
+    growth: O > 60 ? 'Driven by intellectual challenge and new domains. You seek roles that expand your perspective.' : C > 60 ? 'Progress-oriented — motivated by setting and achieving concrete milestones with clear impact.' : 'Relationship-driven growth. You develop through collaboration, mentorship, and team success.'
+  };
+  return insights[type] || 'Assessed during your most recent ROLEIQ application.';
+}
+
+// ─── ROLE DISCOVERY ───────────────────────────────────────────────────────────
+function calcMatchScore(role) {
+  // Simple match scoring based on preferences and profile
+  const prefs = loadLocal('preferences', {});
+  const skills = (profileData.skills || '').toLowerCase();
+  const f = role.fields;
+  let score = 55 + Math.floor(Math.random() * 30); // base with variance
+  if (prefs.location && f['Location'] && f['Location'].toLowerCase().includes(prefs.location.toLowerCase())) score += 10;
+  if (prefs.fulltime && f['Employment Type'] === 'Full Time') score += 5;
+  if (prefs.remote && f['Employment Type'] === 'Remote') score += 8;
+  return Math.min(score, 97);
+}
+
+function renderRoleDiscovery(roles) {
+  const grid = document.getElementById('roles-discovery-grid');
+  const loading = document.getElementById('roles-discovery-loading');
+  const empty = document.getElementById('roles-empty');
+  loading.style.display = 'none';
+
+  const cat = activeCategory;
+  let filtered = roles.filter(r => r.fields['Status'] === 'Active' || !r.fields['Status']);
+
+  if (cat === 'matched') {
+    filtered = filtered.filter(r => calcMatchScore(r) >= 75);
+  } else if (cat !== 'all') {
+    filtered = filtered.filter(r => {
+      const cls = (r.fields['Classification'] || '').toLowerCase();
+      return cls.includes(cat.toLowerCase());
+    });
+  }
+
+  const search = document.querySelector('.discovery-search')?.value?.toLowerCase() || '';
+  if (search) {
+    filtered = filtered.filter(r => {
+      const f = r.fields;
+      return (f['Role Title'] || '').toLowerCase().includes(search) ||
+             (f['Classification'] || '').toLowerCase().includes(search) ||
+             (f['Location'] || '').toLowerCase().includes(search);
+    });
+  }
+
+  if (!filtered.length) {
+    grid.style.display = 'none';
+    empty.style.display = 'block';
+    return;
+  }
+
+  grid.style.display = 'grid';
+  empty.style.display = 'none';
+
+  // Sort by match score
+  const withScores = filtered.map(r => ({ ...r, _match: calcMatchScore(r) }))
+    .sort((a, b) => b._match - a._match);
+
+  grid.innerHTML = withScores.map(r => {
+    const f = r.fields;
+    const match = r._match;
+    const isGoodMatch = match >= 75;
+    return `<div class="role-discovery-card ${isGoodMatch ? 'matched' : ''}">
+      ${isGoodMatch ? `<span class="match-badge">✦ Good match</span>` : ''}
+      <div class="role-disc-title">${f['Role Title'] || 'Role'}</div>
+      <div class="role-disc-meta">${[f['Location'], f['Employment Type']].filter(Boolean).join(' · ') || 'via ROLEIQ'}</div>
+      <div class="role-disc-tags">
+        ${f['Classification'] ? `<span class="role-disc-tag">${f['Classification']}</span>` : ''}
+        ${f['Seniority'] ? `<span class="role-disc-tag">${f['Seniority']}</span>` : ''}
+        ${f['Status'] ? `<span class="role-disc-tag" style="color:var(--accent);border-color:rgba(200,245,90,0.2)">Active</span>` : ''}
+      </div>
+      <div class="role-disc-footer">
+        <div>
+          <div class="role-disc-match-score">${match}%</div>
+          <div class="role-disc-match-label">profile match</div>
+        </div>
+        <div class="apply-link">${f['Candidate Invite Link'] ? `<a href="${f['Candidate Invite Link']}" target="_blank" style="color:inherit">Apply now →</a>` : 'View role →'}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterByCategory(cat, el) {
+  activeCategory = cat;
+  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  if (el) el.classList.add('active');
+  renderRoleDiscovery(allOpenRoles);
+}
+
+function filterRoleDiscovery(query) {
+  renderRoleDiscovery(allOpenRoles);
+}
+
+function getDemoRoles() {
+  return [
+    { id:'d1', fields:{ 'Role Title':'Senior Account Manager','Classification':'Sales','Location':'Sydney','Employment Type':'Full Time','Status':'Active','Seniority':'Senior' }},
+    { id:'d2', fields:{ 'Role Title':'Recruitment Consultant','Classification':'Recruitment','Location':'Melbourne','Employment Type':'Full Time','Status':'Active','Seniority':'Mid-level' }},
+    { id:'d3', fields:{ 'Role Title':'Operations Manager','Classification':'Operations','Location':'Brisbane','Employment Type':'Full Time','Status':'Active','Seniority':'Senior' }},
+    { id:'d4', fields:{ 'Role Title':'Business Development Manager','Classification':'Sales','Location':'Perth','Employment Type':'Full Time','Status':'Active','Seniority':'Senior' }},
+  ];
+}
+
+// ─── TABS ─────────────────────────────────────────────────────────────────────
+function switchTab(tab) {
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('ptab-' + tab).classList.add('active');
+  document.getElementById('panel-' + tab).classList.add('active');
+}
+
+// ─── WINDOW EXPORTS ───────────────────────────────────────────────────────────
+window.doLogin = doLogin;
+window.doRegister = doRegister;
+window.doReset = doReset;
+window.logout = logout;
+window.showScreen = showScreen;
+window.switchTab = switchTab;
+window.saveProfile = saveProfile;
+window.saveSummary = saveSummary;
+window.savePreferences = savePreferences;
+window.handleResumeUpload = handleResumeUpload;
+window.clearResume = clearResume;
+window.filterByCategory = filterByCategory;
+window.filterRoleDiscovery = filterRoleDiscovery;
+</script>
+</body>
+</html>
