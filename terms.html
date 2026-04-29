@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terms of Service — ROLEIQ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --white: #f5f5f5;
+    --dark-muted: #8a8a8a;
+    --accent: #c8f55a;
+    --accent-dark: #a8d040;
+    --border: rgba(255,255,255,0.1);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Cabinet Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-decoration: none; transition: opacity 0.2s; }
+  a:hover { opacity: 0.75; }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 1.25rem 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-logo {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    letter-spacing: -0.01em;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--white);
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-back {
+    font-size: 0.85rem;
+    color: var(--dark-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: color 0.2s;
+  }
+  .nav-back:hover { color: var(--white); opacity: 1; }
+
+  /* CONTENT */
+  .page-wrap {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 8rem 2rem 6rem;
+  }
+  .page-header {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .label {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+  h1 {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: clamp(2rem, 4vw, 3rem);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+  }
+  h1 em { font-style: normal; color: var(--accent); }
+  .meta { font-size: 0.85rem; color: var(--dark-muted); }
+
+  /* SECTIONS */
+  .terms-body { display: flex; flex-direction: column; gap: 2.5rem; }
+  section { padding-bottom: 2.5rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
+  section:last-child { border-bottom: none; padding-bottom: 0; }
+
+  h2 {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--white);
+    margin-bottom: 0.85rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+  }
+  h2 .num {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    min-width: 1.6rem;
+  }
+  p { color: var(--dark-muted); font-size: 0.9rem; line-height: 1.8; }
+  p + p { margin-top: 0.75rem; }
+  ul {
+    margin-top: 0.75rem;
+    padding-left: 1.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    color: var(--dark-muted);
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+  strong { color: var(--white); font-weight: 600; }
+
+  .sub-heading {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: var(--accent);
+    margin: 1.25rem 0 0.6rem;
+  }
+
+  /* GUARANTEE CALLOUT */
+  .guarantee-box {
+    margin-top: 1.25rem;
+    background: rgba(200,245,90,0.04);
+    border: 1px solid rgba(200,245,90,0.18);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2.5rem 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .footer-logo {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .footer-logo span { color: var(--accent); }
+  .footer-copy { font-size: 0.8rem; color: var(--dark-muted); }
+  .footer-links { display: flex; gap: 1.5rem; }
+  .footer-links a { font-size: 0.8rem; color: var(--dark-muted); }
+  .footer-links a:hover { color: var(--white); opacity: 1; }
+
+  @media (max-width: 600px) {
+    nav { padding: 1rem 1.25rem; }
+    .page-wrap { padding: 7rem 1.25rem 4rem; }
+    footer { flex-direction: column; text-align: center; padding: 2rem 1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">ROLE<span>IQ</span></a>
+  <a class="nav-back" href="index.html">← Back to ROLEIQ</a>
+</nav>
+
+<div class="page-wrap">
+
+  <div class="page-header">
+    <div class="label">Legal</div>
+    <h1>Terms of <em>Service</em></h1>
+    <p class="meta">Effective date: 1 May 2026 &nbsp;·&nbsp; Last updated: 1 May 2026</p>
+  </div>
+
+  <div class="terms-body">
+
+    <section>
+      <h2><span class="num">1</span>About These Terms</h2>
+      <p>These Terms of Service (<strong>"Terms"</strong>) govern your access to and use of the ROLEIQ platform, website, and all related services (collectively, the <strong>"Platform"</strong>) operated by <strong>Role IQ Pty Ltd (ACN 697 418 581)</strong>, the owner of the ROLE IQ brand and trade mark (<strong>"ROLEIQ"</strong>, <strong>"we"</strong>, <strong>"us"</strong>, <strong>"our"</strong>).</p>
+      <p>By accessing or using the Platform in any way, you agree to be bound by these Terms. If you do not agree, you must not access or use the Platform. These Terms form a binding legal agreement between you and ROLEIQ.</p>
+      <p>If you access or use the Platform on behalf of an organisation, you represent and warrant that you have authority to bind that organisation to these Terms, and references to "you" include that organisation.</p>
+    </section>
+
+    <section>
+      <h2><span class="num">2</span>Definitions</h2>
+      <p><strong>"Recruiter"</strong> means any individual or organisation that registers an account to post roles, manage candidates, or access recruitment features of the Platform.</p>
+      <p><strong>"Applicant"</strong> means any individual who submits an application or completes an assessment through the Platform.</p>
+      <p><strong>"Role Bundle"</strong> means a pre-purchased allocation of role credits as described on the pricing page at the time of purchase.</p>
+      <p><strong>"Deep Dive"</strong> means the premium add-on extended assessment service delivered by certified independent third-party partners.</p>
+      <p><strong>"Content"</strong> means any data, text, files, documents, or information uploaded to, submitted through, or generated by use of the Platform.</p>
+      <p><strong>"Placement"</strong> means a successful hire made by a Recruiter where the successful applicant applied and was assessed through the Platform.</p>
+    </section>
+
+    <section>
+      <h2><span class="num">3</span>Account Registration</h2>
+      <p>You must provide accurate, current, and complete information when creating an account and keep that information up to date. You are solely responsible for maintaining the confidentiality of your login credentials and for all activity that occurs under your account.</p>
+      <p>You must notify us immediately upon becoming aware of any unauthorised use of your account or any other breach of security. ROLEIQ will not be liable for any loss arising from your failure to comply with this clause.</p>
+      <p>We reserve the right to suspend or terminate any account where we reasonably believe that registration information is false or misleading, these Terms have been breached, or continued access poses a risk to the Platform, other users, or third parties.</p>
+    </section>
+
+    <section>
+      <h2><span class="num">4</span>Permitted Use</h2>
+      <p>The Platform is provided solely for lawful recruitment and candidate assessment purposes. You agree not to:</p>
+      <ul>
+        <li>use the Platform in breach of any applicable law or regulation, including employment, privacy, equal opportunity, and anti-discrimination laws;</li>
+        <li>use assessment results as the sole or determinative basis for any hiring, promotion, or employment decision without independent human judgement and consideration;</li>
+        <li>attempt to reverse engineer, decompile, copy, reproduce, or extract the underlying algorithms, scoring models, assessment frameworks, or any other intellectual property of the Platform;</li>
+        <li>resell, sublicense, white-label, or otherwise commercially exploit any part of the Platform or its outputs without our prior written consent;</li>
+        <li>upload or transmit Content that is false, misleading, defamatory, discriminatory, or that infringes any third-party intellectual property or privacy rights;</li>
+        <li>use automated tools, scripts, bots, or scraping techniques to access or extract data from the Platform;</li>
+        <li>circumvent, disable, or interfere with any security, access control, rate limiting, or usage restriction of the Platform.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2><span class="num">5</span>Payments, Bundles &amp; Refunds</h2>
+      <p>All fees are as published on the pricing page at the time of purchase and are exclusive of applicable taxes unless expressly stated otherwise. Payment is required in full in advance. We accept payment via the methods specified on the Platform at the time of purchase.</p>
+      <p>Role Bundles are valid for 12 months from the date of purchase. Unused credits expire at the end of that period. Expired credits are non-refundable except as expressly provided in these Terms or required by applicable law.</p>
+      <p>Deep Dive fees are quoted per candidate and are non-refundable once the assessment process has commenced, regardless of the outcome of the assessment or the subsequent employment decision.</p>
+      <p>We reserve the right to modify pricing for new purchases at any time. Price changes will not affect Role Bundles already purchased prior to the change taking effect.</p>
+
+      <div class="sub-heading">Money-Back Guarantee — Full Conditions</div>
+      <div class="guarantee-box">
+        <p>ROLEIQ offers a full refund of the single role credit applied to a specific Placement (<strong>"Guarantee"</strong>), subject to <em>all</em> of the following conditions being satisfied:</p>
+        <ul style="margin-top:0.85rem">
+          <li>The Recruiter's account was active, paid, and in good standing at all relevant times;</li>
+          <li>The successful applicant applied for the role directly and exclusively through the ROLEIQ Platform — applicants sourced via any external channel, job board, referral, or other means are not eligible;</li>
+          <li>The successful applicant completed the full ROLEIQ psychometric assessment process for that specific role prior to any offer of employment;</li>
+          <li>The successful applicant's employment was terminated — by either the Recruiter or the applicant — within three (3) calendar months of their confirmed commencement date;</li>
+          <li>The Recruiter submits a written refund request via the contact form within 14 days of the termination date, providing written evidence of the termination and commencement date;</li>
+          <li>The termination was not due to redundancy, business restructure, role elimination, genuine retrenchment, mutual agreement, or any circumstance unrelated to the candidate's suitability for the role;</li>
+          <li>The Recruiter has not breached these Terms at any point relevant to the Placement.</li>
+        </ul>
+        <p style="margin-top:0.85rem">The Guarantee applies to a refund of the single role credit used for that Placement only. It does not apply to Deep Dive fees, third-party assessment costs, taxes, or any other amounts paid. The Guarantee may be claimed once per role and once per calendar year per Recruiter account. ROLEIQ's assessment of whether all conditions are satisfied is final, subject to any rights you may have under applicable consumer protection legislation that cannot be excluded.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2><span class="num">6</span>Intellectual Property</h2>
+      <p>All intellectual property rights in the Platform — including but not limited to software, source code, algorithms, psychometric assessment frameworks, scoring models, AI prompts and outputs, UI and UX design, branding, and the name and trade mark <strong>ROLE IQ</strong> — are owned by Role IQ Pty Ltd (ACN 697 418 581) or licensed to it. Nothing in these Terms grants you any right, title, or interest in ROLEIQ's intellectual property beyond the limited licence to use the Platform as expressly set out in these Terms.</p>
+      <p>You retain ownership of Content you upload to the Platform. By uploading Content, you grant ROLEIQ a non-exclusive, royalty-free, worldwide, sublicensable licence to use, store, reproduce, and process that Content solely to the extent necessary to provide, maintain, and improve the Platform.</p>
+      <p>You must not use the ROLEIQ name, logo, trade marks, or any confusingly similar mark in any context — including marketing, promotion, or domain names — without our prior written consent.</p>
+    </section>
+
+    <section>
+      <h2><span class="num">7</span>Assessment Results &amp; Recruiter Responsibility</h2>
+      <p>ROLEIQ provides psychometric assessment scores and AI-generated insights as decision-support tools only. They are designed to assist — not replace — independent human judgement in hiring decisions. Assessment results are indicative only and are not a guarantee, prediction, or warranty of any candidate's job performance, cultural fit, retention, or suitability for any role.</p>
+      <p>Recruiters are solely responsible for all employment decisions and for ensuring their use of the Platform and assessment results complies with all applicable employment, equal opportunity, and anti-discrimination laws in their jurisdiction. ROLEIQ is not a party to any employment relationship and is not liable for any decision made in reliance on Platform outputs.</p>
+    </section>
+
+    <section>
+      <h2><span class="num">8</span>Privacy &amp; Data</h2>
+      <p>Our collection, use, storage, and disclosure of personal information is governed by our Privacy Policy, which forms part of these Terms. In the event of any inconsistency between these Terms and the Privacy Policy on a privacy matter, the Privacy Policy prevails.</p>
+      <p>By submitting or uploading personal information about Applicants, you represent and warrant that: (a) that information was collected lawfully; (b) you have all necessary consents or authorities to share it with ROLEIQ; and (c) Applicants have been informed that their information will be used for recruitment assessment purposes.</p>
+      <p>You must not upload sensitive personal information beyond what is reasonably necessary for legitimate recruitment purposes and must comply with all applicable data protection and privacy laws in your jurisdiction.</p>
+    </section>
+
+    <section>
+      <h2><span class="num">9</span>Third-Party Services</h2>
+      <p>The Platform integrates with or relies upon third-party services including AI model providers, payment processors, and assessment delivery partners. ROLEIQ does not warrant the performance, availability, accuracy, or security of any third-party service. Outages or failures of third-party services do not constitute a breach by ROLEIQ. Your use of third-party services may be subject to their own terms and privacy policies, which are your responsibility to review.</p>
+      <p>Deep Dive assessments are delivered by independent certified third-party partners. ROLEIQ acts as an introducer only. ROLEIQ is not responsible for and expressly disclaims liability for the conduct, professional advice, outputs, errors, or omissions of any Deep Dive delivery partner.</p>
+    </section>
+
+    <section>
+      <h2><span class="num">10</span>Disclaimers</h2>
+      <p>The Platform is provided <strong>"as is"</strong> and <strong>"as available"</strong> without warranty of any kind, whether express, implied, or statutory, including any implied warranties of merchantability, fitness for a particular purpose, title, or non-infringement.</p>
+      <p>ROLEIQ does not warrant that: (a) the Platform will be uninterrupted, timely, secure, or error-free; (b) any results obtained from use of the Platform will be accurate, reliable, or complete; (c) any defects will be corrected; or (d) AI-generated content, assessment scores, job descriptions, or other outputs will be free from inaccuracy, bias, or omission.</p>
+      <p>To the fullest extent permitted by applicable law, ROLEIQ disclaims all liability for any decisions made in reliance on Platform outputs.</p>
+    </section>
+
+    <section>
+      <h2><span class="num">11</span>Limitation of Liability</h2>
+      <p>To the maximum extent permitted by applicable law, ROLEIQ's total aggregate liability to you for all claims arising out of or in connection with these Terms or your use of the Platform — whether in contract, tort (including negligence), statute, or otherwise — is limited to the total fees actually paid by you to ROLEIQ in the three (3) calendar months immediately preceding the event giving rise to the claim.</p>
+      <p>ROLEIQ is not liable under any circumstances for any indirect, incidental, special, consequential, exemplary, or punitive loss or damage, including loss of profits, revenue, data, business, goodwill, opportunity, or reputation, even if ROLEIQ has been advised of the possibility of such loss.</p>
+      <p>Nothing in these Terms excludes or limits any liability that cannot lawfully be excluded or limited, including rights under applicable consumer protection legislation.</p>
+    </section>
+
+    <section>
+      <h2><span class="num">12</span>Indemnity</h2>
+      <p>You agree to indemnify, defend, and hold harmless ROLEIQ and its directors, officers, employees, contractors, and agents from and against any and all claims, demands, actions, damages, losses, liabilities, costs, and expenses (including reasonable legal fees) arising out of or in connection with: (a) your access to or use of the Platform; (b) your breach of these Terms; (c) your violation of any applicable law or third-party right; (d) any Content you upload or submit; or (e) any claim brought by an Applicant arising from or connected to your hiring decisions or your use of assessment results.</p>
+    </section>
+
+    <section>
+      <h2><span class="num">13</span>Suspension &amp; Termination</h2>
+      <p>We may suspend or terminate your access to the Platform immediately, with or without notice, where we reasonably believe you have breached these Terms, engaged in fraudulent, unlawful, or harmful conduct, or where required by law or court order.</p>
+      <p>Upon termination for any reason: (a) all licences granted to you under these Terms cease immediately; (b) unused Role Bundle credits are forfeited without refund, unless termination is caused solely by our uncured material breach; (c) provisions that by their nature should survive termination — including intellectual property, limitation of liability, indemnity, and governing law — continue in full force.</p>
+      <p>You may terminate your account at any time by contacting us. Termination at your election does not entitle you to any refund of unused credits except where required by applicable consumer law.</p>
+    </section>
+
+    <section>
+      <h2><span class="num">14</span>Modifications to the Platform &amp; Terms</h2>
+      <p>We may modify, suspend, or discontinue the Platform or any part of it at any time with reasonable notice where practicable. We may update these Terms at any time. For material changes, we will provide at least 14 days' prior notice by email to your registered address or by prominent notice on the Platform.</p>
+      <p>Your continued access to or use of the Platform after a change to these Terms takes effect constitutes your acceptance of the updated Terms. If you do not accept a change, you must stop using the Platform before the effective date of that change.</p>
+    </section>
+
+    <section>
+      <h2><span class="num">15</span>Governing Law &amp; Disputes</h2>
+      <p>These Terms are governed by and construed in accordance with the laws of New South Wales, Australia, without regard to its conflict of law principles. You irrevocably submit to the non-exclusive jurisdiction of the courts of New South Wales, Australia for the resolution of any dispute arising out of or in connection with these Terms.</p>
+      <p>Before commencing any legal proceedings (other than seeking urgent interlocutory relief), each party agrees to notify the other in writing of the dispute and to attempt resolution in good faith for a period of 30 days from that notice.</p>
+    </section>
+
+    <section>
+      <h2><span class="num">16</span>General</h2>
+      <p><strong>Entire agreement.</strong> These Terms, together with the Privacy Policy, constitute the entire agreement between you and ROLEIQ with respect to the Platform and supersede all prior or contemporaneous representations, understandings, agreements, and communications, whether written or oral.</p>
+      <p><strong>Severability.</strong> If any provision of these Terms is found by a court of competent jurisdiction to be invalid, unlawful, or unenforceable, that provision will be modified to the minimum extent necessary to make it enforceable. If modification is not possible, it will be severed. The remaining provisions continue in full force and effect.</p>
+      <p><strong>No waiver.</strong> Failure or delay by ROLEIQ to exercise any right or remedy under these Terms does not constitute a waiver of that or any other right or remedy. No waiver is effective unless given in writing.</p>
+      <p><strong>Assignment.</strong> You may not assign, transfer, novate, or otherwise deal with your rights or obligations under these Terms without our prior written consent. ROLEIQ may assign or transfer its rights and obligations under these Terms without restriction and without notice.</p>
+      <p><strong>Force majeure.</strong> ROLEIQ is not liable for any delay or failure in performance caused by circumstances beyond our reasonable control, including acts of God, natural disasters, power failures, internet outages, cyberattacks, or government action.</p>
+      <p><strong>Relationship.</strong> Nothing in these Terms creates a partnership, joint venture, agency, franchise, or employment relationship between the parties.</p>
+      <p><strong>Notices.</strong> Legal notices to ROLEIQ must be submitted via the contact form at roleiq.org. Notices to you will be sent to your registered email address.</p>
+    </section>
+
+  </div>
+</div>
+
+<footer>
+  <a class="footer-logo" href="index.html">ROLE<span>IQ</span></a>
+  <div class="footer-copy">© 2026 ROLEIQ. All rights reserved.</div>
+  <div class="footer-links">
+    <a href="#">Privacy</a>
+    <a href="terms.html">Terms</a>
+    <a href="index.html">Contact</a>
+  </div>
+</footer>
+
+</body>
+</html>
